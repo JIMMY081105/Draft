@@ -2,6 +2,9 @@ package com.comp2042.model;
 
 import com.comp2042.data.ClearRow;
 import com.comp2042.data.ViewData;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.ObjectProperty;
 
 public interface Board {
 
@@ -16,5 +19,9 @@ public interface Board {
     ClearRow clearRows();
     Score getScore();
     void newGame();
+    
+    BooleanProperty isGameOverProperty();
+    ObjectProperty<int[][]> boardMatrixProperty();
+    IntegerProperty scoreProperty();
 }
 

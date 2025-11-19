@@ -6,12 +6,15 @@ import com.comp2042.event.EventSource;
 import com.comp2042.event.EventType;
 import com.comp2042.event.InputEventListener;
 import com.comp2042.event.MoveEvent;
+import com.comp2042.model.Board;
+import com.comp2042.util.ColorMapper;
 import com.comp2042.util.GameConstants;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.IntegerProperty;
 import javafx.beans.property.SimpleBooleanProperty;
+import javafx.beans.value.ChangeListener;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.fxml.FXML;
@@ -22,7 +25,6 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.GridPane;
 import javafx.scene.paint.Color;
-import javafx.scene.paint.Paint;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
 import javafx.util.Duration;
@@ -55,6 +57,8 @@ public class GuiController implements Initializable {
     private final BooleanProperty isPause = new SimpleBooleanProperty();
 
     private final BooleanProperty isGameOver = new SimpleBooleanProperty();
+
+    private Board board;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -95,6 +99,32 @@ public class GuiController implements Initializable {
         reflection.setTopOffset(-12);
     }
 
+    public void bind(Board board) {
+        this.board = board;
+        
+        ChangeListener<int[][]> boardMatrixListener = (obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                refreshGameBackground(newVal);
+            }
+        };
+        
+        ChangeListener<Boolean> gameOverListener = (obs, oldVal, newVal) -> {
+            if (newVal != null && newVal) {
+                gameOver();
+            } else {
+                gameOverPanel.setVisible(false);
+                isGameOver.setValue(Boolean.FALSE);
+            }
+        };
+        
+        board.boardMatrixProperty().addListener(boardMatrixListener);
+        board.isGameOverProperty().addListener(gameOverListener);
+        
+        if (board.getBoardMatrix() != null && board.getViewData() != null) {
+            initGameView(board.getBoardMatrix(), board.getViewData());
+        }
+    }
+
     public void initGameView(int[][] boardMatrix, ViewData brick) {
         displayMatrix = new Rectangle[boardMatrix.length][boardMatrix[0].length];
         for (int i = GameConstants.HIDDEN_BUFFER_ROWS; i < boardMatrix.length; i++) {
@@ -110,7 +140,7 @@ public class GuiController implements Initializable {
         for (int i = 0; i < brick.getBrickData().length; i++) {
             for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                 Rectangle rectangle = new Rectangle(GameConstants.BRICK_SIZE, GameConstants.BRICK_SIZE);
-                rectangle.setFill(getFillColor(brick.getBrickData()[i][j]));
+                rectangle.setFill(ColorMapper.getColor(brick.getBrickData()[i][j]));
                 rectangles[i][j] = rectangle;
                 brickPanel.add(rectangle, j, i);
             }
@@ -126,41 +156,6 @@ public class GuiController implements Initializable {
         timeLine.setCycleCount(Timeline.INDEFINITE);
         timeLine.play();
     }
-
-    private Paint getFillColor(int i) {
-        Paint returnPaint;
-        switch (i) {
-            case 0:
-                returnPaint = Color.TRANSPARENT;
-                break;
-            case 1:
-                returnPaint = Color.AQUA;
-                break;
-            case 2:
-                returnPaint = Color.BLUEVIOLET;
-                break;
-            case 3:
-                returnPaint = Color.DARKGREEN;
-                break;
-            case 4:
-                returnPaint = Color.YELLOW;
-                break;
-            case 5:
-                returnPaint = Color.RED;
-                break;
-            case 6:
-                returnPaint = Color.BEIGE;
-                break;
-            case 7:
-                returnPaint = Color.BURLYWOOD;
-                break;
-            default:
-                returnPaint = Color.WHITE;
-                break;
-        }
-        return returnPaint;
-    }
-
 
     private void refreshBrick(ViewData brick) {
         if (isPause.getValue() == Boolean.FALSE) {
@@ -183,7 +178,7 @@ public class GuiController implements Initializable {
     }
 
     private void setRectangleData(int color, Rectangle rectangle) {
-        rectangle.setFill(getFillColor(color));
+        rectangle.setFill(ColorMapper.getColor(color));
         rectangle.setArcHeight(GameConstants.BRICK_ARC_SIZE);
         rectangle.setArcWidth(GameConstants.BRICK_ARC_SIZE);
     }
@@ -229,4 +224,3 @@ public class GuiController implements Initializable {
         gamePanel.requestFocus();
     }
 }
-

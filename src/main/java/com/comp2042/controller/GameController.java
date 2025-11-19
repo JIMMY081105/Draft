@@ -7,22 +7,15 @@ import com.comp2042.event.EventSource;
 import com.comp2042.event.InputEventListener;
 import com.comp2042.event.MoveEvent;
 import com.comp2042.model.Board;
-import com.comp2042.model.SimpleBoard;
 import com.comp2042.util.GameConstants;
-import com.comp2042.view.GuiController;
 
 public class GameController implements InputEventListener {
 
-    private Board board = new SimpleBoard(GameConstants.BOARD_HEIGHT, GameConstants.BOARD_WIDTH);
+    private final Board board;
 
-    private final GuiController viewGuiController;
-
-    public GameController(GuiController c) {
-        viewGuiController = c;
+    public GameController(Board board) {
+        this.board = board;
         board.createNewBrick();
-        viewGuiController.setEventListener(this);
-        viewGuiController.initGameView(board.getBoardMatrix(), board.getViewData());
-        viewGuiController.bindScore(board.getScore().scoreProperty());
     }
 
     @Override
@@ -35,12 +28,7 @@ public class GameController implements InputEventListener {
             if (clearRow.getLinesRemoved() > 0) {
                 board.getScore().add(clearRow.getScoreBonus());
             }
-            if (board.createNewBrick()) {
-                viewGuiController.gameOver();
-            }
-
-            viewGuiController.refreshGameBackground(board.getBoardMatrix());
-
+            board.createNewBrick();
         } else {
             if (event.getEventSource() == EventSource.USER) {
                 board.getScore().add(GameConstants.MANUAL_DOWN_SCORE);
@@ -70,8 +58,6 @@ public class GameController implements InputEventListener {
     @Override
     public ViewData createNewGame() {
         board.newGame();
-        viewGuiController.refreshGameBackground(board.getBoardMatrix());
         return board.getViewData();
     }
 }
-

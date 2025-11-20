@@ -10,8 +10,8 @@
 
     <BorderPane fx:id="gameBoard" layoutX="0" layoutY="0">
         <center>
-            <Pane>
-                <GridPane fx:id="gamePanel" hgap="1" vgap="1" styleClass="gameBoard"/>
+            <Pane styleClass="gameBoard">
+                <GridPane fx:id="gamePanel" hgap="1" vgap="1"/>
                 <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
             </Pane>
         </center>

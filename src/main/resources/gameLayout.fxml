@@ -5,16 +5,17 @@
 <?import javafx.scene.layout.*?>
 <?import java.net.URL?>
 
-<Pane fx:controller="com.comp2042.view.GuiController"
+<StackPane fx:controller="com.comp2042.view.GuiController"
       xmlns:fx="http://javafx.com/fxml">
 
     <BorderPane fx:id="gameBoard" layoutX="0" layoutY="0">
         <center>
-            <GridPane fx:id="gamePanel" hgap="1" vgap="1" styleClass="gameBoard"/>
+            <Pane>
+                <GridPane fx:id="gamePanel" hgap="1" vgap="1" styleClass="gameBoard"/>
+                <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
+            </Pane>
         </center>
     </BorderPane>
-
-    <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
 
     <Group fx:id="groupNotification" layoutX="14" layoutY="203">
         <VBox alignment="CENTER">
@@ -25,4 +26,4 @@
     <stylesheets>
         <URL value="@window_style.css"/>
     </stylesheets>
-</Pane>
+</StackPane>

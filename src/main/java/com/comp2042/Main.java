@@ -56,7 +56,7 @@ public class Main extends Application {
         gameRoot.setLayoutX(x);
         gameRoot.setLayoutY(y);
 
-        primaryStage.setTitle("TetrisJFX");
+        primaryStage.setTitle("Tetris");
         Scene scene = new Scene(backgroundRoot, screenWidth, screenHeight);
         backgroundRoot.setStyle("-fx-background-color: black;");
         primaryStage.setScene(scene);

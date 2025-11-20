@@ -8,7 +8,11 @@
 <Pane fx:controller="com.comp2042.view.GuiController"
       xmlns:fx="http://javafx.com/fxml">
 
-    <GridPane fx:id="gamePanel" hgap="1" vgap="1" layoutY="30" layoutX="40" styleClass="gameBoard"/>
+    <BorderPane fx:id="gameBoard" layoutX="0.0" layoutY="0.0">
+        <center>
+            <GridPane fx:id="gamePanel" hgap="1" vgap="1" styleClass="gameBoard"/>
+        </center>
+    </BorderPane>
 
     <GridPane fx:id="brickPanel" vgap="1" hgap="1"/>
 

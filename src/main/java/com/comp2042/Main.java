@@ -4,15 +4,25 @@ import com.comp2042.controller.GameController;
 import com.comp2042.model.Board;
 import com.comp2042.model.SimpleBoard;
 import com.comp2042.util.GameConstants;
+import com.comp2042.util.UIScalingUtil;
 import com.comp2042.view.GuiController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.transform.Scale;
 import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
 
+/**
+ * Main application class that initializes the Tetris game.
+ * 
+ * Follows MVC architecture:
+ * - Model: Board (SimpleBoard)
+ * - View: GuiController (loaded from FXML)
+ * - Controller: GameController
+ */
 public class Main extends Application {
 
     @Override
@@ -28,14 +38,28 @@ public class Main extends Application {
         Parent root = fxmlLoader.load();
         GuiController guiController = fxmlLoader.getController();
 
-        // 3. Calculate Window Size dynamically
-        // This ensures the window grows when you change BRICK_SIZE in GameConstants
-        int windowWidth = GameConstants.BOARD_WIDTH * GameConstants.BRICK_SIZE + GameConstants.WINDOW_PADDING_X;
-        int windowHeight = (GameConstants.BOARD_HEIGHT - GameConstants.HIDDEN_BUFFER_ROWS) * GameConstants.BRICK_SIZE + GameConstants.WINDOW_PADDING_Y;
+        // 3. Calculate responsive window size with aspect ratio preservation
+        // Uses UIScalingUtil to maintain Single Responsibility Principle
+        UIScalingUtil.DimensionResult idealDimensions = UIScalingUtil.calculateIdealDimensions();
+        double scaleFactor = UIScalingUtil.calculateScaleFactor();
+        
+        // Use ideal dimensions for the Scene (maintains correct aspect ratio)
+        double windowWidth = idealDimensions.getWidth();
+        double windowHeight = idealDimensions.getHeight();
+        
+        // Apply scale transform to root node to scale everything proportionally
+        // This ensures the game board scales correctly without distortion
+        Scale scale = new Scale(scaleFactor, scaleFactor);
+        scale.setPivotX(0);
+        scale.setPivotY(0);
+        root.getTransforms().add(scale);
+        
+        // Adjust window size to account for scaling
+        double scaledWidth = windowWidth * scaleFactor;
+        double scaledHeight = windowHeight * scaleFactor;
 
         primaryStage.setTitle("TetrisJFX");
-        // Use the calculated sizes instead of 300, 510
-        Scene scene = new Scene(root, windowWidth, windowHeight);
+        Scene scene = new Scene(root, scaledWidth, scaledHeight);
         primaryStage.setScene(scene);
         primaryStage.show();
         

@@ -304,3 +304,4 @@ The UI has been successfully scaled to 2x its original size while maintaining:
 
 The game is now more visually prominent and easier to see, while all code remains maintainable and follows best practices.
 
+

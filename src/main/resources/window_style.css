@@ -1,8 +1,5 @@
-.root, .pane-root {
-    -fx-background-image: url("/background_image.png");
-    -fx-background-size: cover;
-    -fx-background-position: center;
-    -fx-background-repeat: no-repeat;
+.root {
+    -fx-background-image: url("background_image.png");
 }
 
 .nextBrick {

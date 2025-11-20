@@ -35,6 +35,10 @@ public class Main extends Application {
         double screenWidth = bounds.getWidth();
         double screenHeight = bounds.getHeight();
         
+        double screenOccupancyRatio = 0.95;
+        double targetWidth = screenWidth * screenOccupancyRatio;
+        double targetHeight = screenHeight * screenOccupancyRatio;
+        
         double idealWidth = GameConstants.BOARD_WIDTH * GameConstants.BRICK_SIZE + GameConstants.WINDOW_PADDING_X;
         double idealHeight = (GameConstants.BOARD_HEIGHT - GameConstants.HIDDEN_BUFFER_ROWS) * GameConstants.BRICK_SIZE + GameConstants.WINDOW_PADDING_Y;
         
@@ -47,17 +51,17 @@ public class Main extends Application {
         Pane backgroundRoot = new Pane();
         backgroundRoot.getChildren().add(gameRoot);
         
-        double scale = Math.min(screenWidth / idealWidth, screenHeight / idealHeight);
+        double scale = Math.min(targetWidth / idealWidth, targetHeight / idealHeight);
         
         gameRoot.getTransforms().add(new Scale(scale, scale));
         
-        double x = (screenWidth - idealWidth * scale) / 2;
-        double y = (screenHeight - idealHeight * scale) / 2;
+        double x = (targetWidth - idealWidth * scale) / 2;
+        double y = (targetHeight - idealHeight * scale) / 2;
         gameRoot.setLayoutX(x);
         gameRoot.setLayoutY(y);
 
         primaryStage.setTitle("Tetris");
-        Scene scene = new Scene(backgroundRoot, screenWidth, screenHeight);
+        Scene scene = new Scene(backgroundRoot, targetWidth, targetHeight);
         backgroundRoot.setStyle("-fx-background-color: black;");
         primaryStage.setScene(scene);
         primaryStage.show();

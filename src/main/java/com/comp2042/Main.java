@@ -4,14 +4,15 @@ import com.comp2042.controller.GameController;
 import com.comp2042.model.Board;
 import com.comp2042.model.SimpleBoard;
 import com.comp2042.util.GameConstants;
-import com.comp2042.util.UIScalingUtil;
 import com.comp2042.view.GuiController;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Group;
+import javafx.geometry.Rectangle2D;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.layout.Pane;
 import javafx.scene.transform.Scale;
+import javafx.stage.Screen;
 import javafx.stage.Stage;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -26,30 +27,38 @@ public class Main extends Application {
         URL location = getClass().getClassLoader().getResource("gameLayout.fxml");
         ResourceBundle resources = null;
         FXMLLoader fxmlLoader = new FXMLLoader(location, resources);
-        Parent root = fxmlLoader.load();
+        Parent gameRoot = fxmlLoader.load();
         GuiController guiController = fxmlLoader.getController();
 
-        UIScalingUtil.DimensionResult screenDimensions = UIScalingUtil.getScreenDimensions();
-        UIScalingUtil.DimensionResult idealDimensions = UIScalingUtil.calculateIdealDimensions();
-        double scaleFactor = UIScalingUtil.calculateScaleFactor();
+        Screen screen = Screen.getPrimary();
+        Rectangle2D bounds = screen.getVisualBounds();
+        double screenWidth = bounds.getWidth();
+        double screenHeight = bounds.getHeight();
         
-        Scale scale = new Scale(scaleFactor, scaleFactor);
-        double scaledWidth = idealDimensions.getWidth() * scaleFactor;
-        double scaledHeight = idealDimensions.getHeight() * scaleFactor;
+        double idealWidth = GameConstants.BOARD_WIDTH * GameConstants.BRICK_SIZE + GameConstants.WINDOW_PADDING_X;
+        double idealHeight = (GameConstants.BOARD_HEIGHT - GameConstants.HIDDEN_BUFFER_ROWS) * GameConstants.BRICK_SIZE + GameConstants.WINDOW_PADDING_Y;
         
-        scale.setPivotX(scaledWidth / 2.0);
-        scale.setPivotY(scaledHeight / 2.0);
-        root.getTransforms().add(scale);
+        if (gameRoot instanceof Pane) {
+            ((Pane) gameRoot).setPrefSize(idealWidth, idealHeight);
+            ((Pane) gameRoot).setMaxSize(idealWidth, idealHeight);
+            ((Pane) gameRoot).setMinSize(idealWidth, idealHeight);
+        }
         
-        double centerX = (screenDimensions.getWidth() - scaledWidth) / 2.0;
-        double centerY = (screenDimensions.getHeight() - scaledHeight) / 2.0;
+        Pane backgroundRoot = new Pane();
+        backgroundRoot.getChildren().add(gameRoot);
         
-        Group scaledRoot = new Group(root);
-        scaledRoot.setLayoutX(centerX);
-        scaledRoot.setLayoutY(centerY);
+        double scale = Math.min(screenWidth / idealWidth, screenHeight / idealHeight);
+        
+        gameRoot.getTransforms().add(new Scale(scale, scale));
+        
+        double x = (screenWidth - idealWidth * scale) / 2;
+        double y = (screenHeight - idealHeight * scale) / 2;
+        gameRoot.setLayoutX(x);
+        gameRoot.setLayoutY(y);
 
         primaryStage.setTitle("TetrisJFX");
-        Scene scene = new Scene(scaledRoot, screenDimensions.getWidth(), screenDimensions.getHeight());
+        Scene scene = new Scene(backgroundRoot, screenWidth, screenHeight);
+        backgroundRoot.setStyle("-fx-background-color: black;");
         primaryStage.setScene(scene);
         primaryStage.show();
         

@@ -25,6 +25,7 @@ import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.GridPane;
+import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.scene.text.Font;
@@ -37,6 +38,9 @@ public class GuiController implements Initializable {
 
     @FXML
     private BorderPane gameBoard;
+
+    @FXML
+    private Pane gameCanvas;
 
     @FXML
     private GridPane gamePanel;
@@ -149,8 +153,8 @@ public class GuiController implements Initializable {
                 brickPanel.add(rectangle, j, i);
             }
         }
-        brickPanel.setLayoutX(GameConstants.BORDER_WIDTH + brick.getxPosition() * brickPanel.getHgap() + brick.getxPosition() * GameConstants.BRICK_SIZE);
-        brickPanel.setLayoutY(GameConstants.BORDER_WIDTH + GameConstants.BRICK_PANEL_Y_OFFSET + brick.getyPosition() * brickPanel.getVgap() + brick.getyPosition() * GameConstants.BRICK_SIZE);
+        brickPanel.setLayoutX(brick.getxPosition() * (GameConstants.BRICK_SIZE + GameConstants.GAP));
+        brickPanel.setLayoutY((brick.getyPosition() - GameConstants.HIDDEN_BUFFER_ROWS) * (GameConstants.BRICK_SIZE + GameConstants.GAP));
 
 
         timeLine = new Timeline(new KeyFrame(
@@ -163,8 +167,8 @@ public class GuiController implements Initializable {
 
     private void refreshBrick(ViewData brick) {
         if (isPause.getValue() == Boolean.FALSE) {
-            brickPanel.setLayoutX(GameConstants.BORDER_WIDTH + brick.getxPosition() * brickPanel.getHgap() + brick.getxPosition() * GameConstants.BRICK_SIZE);
-            brickPanel.setLayoutY(GameConstants.BORDER_WIDTH + GameConstants.BRICK_PANEL_Y_OFFSET + brick.getyPosition() * brickPanel.getVgap() + brick.getyPosition() * GameConstants.BRICK_SIZE);
+            brickPanel.setLayoutX(brick.getxPosition() * (GameConstants.BRICK_SIZE + GameConstants.GAP));
+            brickPanel.setLayoutY((brick.getyPosition() - GameConstants.HIDDEN_BUFFER_ROWS) * (GameConstants.BRICK_SIZE + GameConstants.GAP));
             for (int i = 0; i < brick.getBrickData().length; i++) {
                 for (int j = 0; j < brick.getBrickData()[i].length; j++) {
                     setRectangleData(brick.getBrickData()[i][j], rectangles[i][j]);

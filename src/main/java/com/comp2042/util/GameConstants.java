@@ -9,8 +9,9 @@ public final class GameConstants {
     public static final int BRICK_PANEL_Y_OFFSET = -63; 
     public static final int BRICK_ARC_SIZE = 12; 
     public static final int BORDER_WIDTH = 12;
+    public static final int GAP = 1;
     public static final int WINDOW_PADDING_X = 100;
-    public static final int WINDOW_PADDING_Y = 80;
+    public static final int WINDOW_PADDING_Y = 100;
     public static final int SCORE_PER_LINE = 50;
     public static final int SPAWN_X = 4;
     public static final int SPAWN_Y = 0;

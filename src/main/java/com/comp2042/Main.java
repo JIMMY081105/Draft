@@ -39,8 +39,16 @@ public class Main extends Application {
         double targetWidth = screenWidth * screenOccupancyRatio;
         double targetHeight = screenHeight * screenOccupancyRatio;
         
-        double idealWidth = GameConstants.BOARD_WIDTH * GameConstants.BRICK_SIZE + GameConstants.WINDOW_PADDING_X + (GameConstants.BORDER_WIDTH * 2);
-        double idealHeight = (GameConstants.BOARD_HEIGHT - GameConstants.HIDDEN_BUFFER_ROWS) * GameConstants.BRICK_SIZE + GameConstants.WINDOW_PADDING_Y + (GameConstants.BORDER_WIDTH * 2);
+        double boardActualWidth = GameConstants.BOARD_WIDTH * GameConstants.BRICK_SIZE + 
+                         (GameConstants.BOARD_WIDTH - 1) * GameConstants.GAP + 
+                         (GameConstants.BORDER_WIDTH * 2);
+
+        double boardActualHeight = (GameConstants.BOARD_HEIGHT - GameConstants.HIDDEN_BUFFER_ROWS) * GameConstants.BRICK_SIZE + 
+                          (GameConstants.BOARD_HEIGHT - GameConstants.HIDDEN_BUFFER_ROWS - 1) * GameConstants.GAP + 
+                          (GameConstants.BORDER_WIDTH * 2);
+
+        double idealWidth = boardActualWidth + GameConstants.WINDOW_PADDING_X;
+        double idealHeight = boardActualHeight + GameConstants.WINDOW_PADDING_Y;
         
         if (gameRoot instanceof Pane) {
             ((Pane) gameRoot).setPrefSize(idealWidth, idealHeight);
